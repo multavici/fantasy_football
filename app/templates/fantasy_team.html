@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>{{ team.name }}</h1>
+    <table class="table table-hover">
+    {% for fplayer in team.fantasy_players %}
+        <tr>
+            <td>
+                {{ fplayer.position }}
+            </td>
+            <td>
+                {{ fplayer.player.name }}
+            </td>
+            <td>
+                {{ fplayer.player.team }}
+            </td>
+            <td>
+                {{ fplayer.player.value / 10 }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

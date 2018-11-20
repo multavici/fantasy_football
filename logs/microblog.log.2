@@ -1,0 +1,92 @@
+2018-10-29 16:29:46,637 ERROR: Exception on / [GET] [in /Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/relationships.py", line 2082, in _determine_joins
+    consider_as_foreign_keys=consider_as_foreign_keys
+  File "<string>", line 2, in join_condition
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/sql/selectable.py", line 981, in _join_condition
+    (a.description, b.description, hint))
+sqlalchemy.exc.NoForeignKeysError: Can't find any foreign key relationships between 'team' and 'player'.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1811, in full_dispatch_request
+    rv = self.preprocess_request()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2087, in preprocess_request
+    rv = func()
+  File "/Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/main/routes.py", line 11, in before_request
+    if current_user.is_authenticated:
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/werkzeug/local.py", line 347, in __getattr__
+    return getattr(self._get_current_object(), name)
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/werkzeug/local.py", line 306, in _get_current_object
+    return self.__local()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask_login/utils.py", line 26, in <lambda>
+    current_user = LocalProxy(lambda: _get_user())
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask_login/utils.py", line 335, in _get_user
+    current_app.login_manager._load_user()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask_login/login_manager.py", line 359, in _load_user
+    return self.reload_user()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask_login/login_manager.py", line 321, in reload_user
+    user = self.user_callback(user_id)
+  File "/Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/models.py", line 87, in load_user
+    return User.query.get(int(id))
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/flask_sqlalchemy/__init__.py", line 512, in __get__
+    mapper = orm.class_mapper(type)
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/base.py", line 421, in class_mapper
+    mapper = _inspect_mapped_class(class_, configure=configure)
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/base.py", line 400, in _inspect_mapped_class
+    mapper._configure_all()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/mapper.py", line 1276, in _configure_all
+    configure_mappers()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/mapper.py", line 3033, in configure_mappers
+    mapper._post_configure_properties()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/mapper.py", line 1832, in _post_configure_properties
+    prop.init()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/interfaces.py", line 183, in init
+    self.do_init()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/relationships.py", line 1656, in do_init
+    self._setup_join_conditions()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/relationships.py", line 1731, in _setup_join_conditions
+    can_be_synced_fn=self._columns_are_mapped
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/relationships.py", line 1998, in __init__
+    self._determine_joins()
+  File "/Users/falkvandermeirsch/Documents/Python/mega_tutorial/microblog/venv/lib/python3.7/site-packages/sqlalchemy/orm/relationships.py", line 2103, in _determine_joins
+    "specify a 'primaryjoin' expression." % self.prop)
+sqlalchemy.exc.NoForeignKeysError: Could not determine join condition between parent/child tables on relationship Team.players - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2018-10-29 16:31:05,894 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:35:35,903 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:38:05,884 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:39:37,966 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:41:34,196 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:44:08,335 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:48:43,429 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:48:53,115 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 16:51:04,030 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 17:17:15,262 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 17:17:27,890 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 17:53:02,036 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 17:56:43,350 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 18:00:35,189 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 18:01:26,926 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 18:09:27,239 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 18:18:35,520 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 19:14:05,561 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:14:03,543 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:15:12,255 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:15:27,881 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:16:04,224 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:16:23,816 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:17:33,891 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:17:40,285 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:18:53,711 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:19:16,643 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:19:35,845 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]
+2018-10-29 21:20:07,749 INFO: Microblog startup [in /Users/falkvandermeirsch/Documents/Python/fantasy_football/megascore/app/__init__.py:69]

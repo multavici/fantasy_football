@@ -1,0 +1,2 @@
+FLASK_APP=megascore.py
+FLASK_ENV=development

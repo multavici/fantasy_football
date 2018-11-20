@@ -1,0 +1,11 @@
+.env
+db_control.py
+scrape_sporza_match_to_file.py
+files/
+logs/
+scripts/
+.vscode/
+venv/
+.idea/
+migrations/
+__pycache__/

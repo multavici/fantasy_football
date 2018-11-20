@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Make team</h1>
+    Team name:
+    <form id="make_team" action="/make_team" method="post">
+        <input autofocus name="team_name" placeholder="FC zwevegem" type="text"/>
+        <h3>Opstelling:</h3>
+        <input type="radio" name="formation" value="433" checked>4-3-3
+        <input type="radio" name="formation" value="442">4-4-2
+        <input type="radio" name="formation" value="352">3-5-2
+        <h3>Basis:</h3>
+        {% for n in range(15) %}
+            <div>
+                <div id="playercontainer{{ n }}" class="playercontainer">
+                    <div id="position_player{{ n }}" class="position"></div>
+                    <div id="choose_player{{ n }}" class="dropdown_container">
+                        <select name="{{ n }}"  id="dropdown_player{{ n }}" class="dropdown">
+                            <option value="null">pick a player</option>
+                            {% for player in players %}
+                                <option value='{{ player.id }}'>{{ player.name }} - {{ player.value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="value_player{{ n }}" class="value"></div>
+                    <div id="team_player{{ n }}" class="team"></div>
+                    <br/>
+                </div>
+            </div>
+            {% if n == 10 %}
+                <h3>Reserve:</h3>
+            {% endif %}
+        {% endfor %}
+        <div>
+            <div class="totalscontainer endline">
+                <div class="totals">Total value:</div>
+                <div id="totalvalue">€0.0</div>
+                <div class="team"></div>
+            </div>
+        </div>
+        <div>
+            <div class="playercontainer">
+                <button class="btn btn-primary button" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

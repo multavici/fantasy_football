@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Players in the Jupiler League</h1>
+    <table class="table table-hover">
+    {% for player in players %}
+        <tr>
+            <td>
+                {{ player.id }}
+            </td>
+            <td>
+                {{ player.name }}
+            </td>
+            <td>
+                {{ player.team.teamname }}
+            </td>
+            <td>
+                {{ player.value }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,18 @@
+span.position {
+    min-width: 200px;
+    width: 200px;
+    float: left;
+    display: block;
+}
+
+span.teamtitle {
+    min-width: 200px;
+    width: 200px;
+    float: left;
+    display: block;
+}
+
+input.player {
+    min-width: 300px;
+    width: 300px;
+}

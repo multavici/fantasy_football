@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Make team</h1>
+    <p>The total value of your team can not exceed 30 mln</p>
+    <div class="col-md-12">
+        <form action="" method="post" novalidate class="form-inline" id="playerform">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                <p>
+                    <span class="teamtitle">{{ form.teamname.label }}</span>
+                    {{ form.teamname(class="form-control") }}
+                    {% for error in form.teamname.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p><span class="teamtitle">{{ form.formation.label }}</span>
+                    {% for subfield in form.formation %}
+                        {{ subfield }}
+                        {{ subfield.label }}
+                    {% endfor %}
+                </p>
+                <hr>
+                {% for l in form.players %}
+                    <p>
+                        <span class="position">{{ l.label() }}</span>
+                        <span class="input">{{ l(list="playerslist", class="form-control player") }}</span>
+                        <span class="team" id="team_{{ l.id }}"></span>
+                        <span class="value" id="value_{{ l.id }}"></span>
+                        {% for error in l.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                {% endfor %}
+                Save the changes and submit when your team is ready!
+                <button type="save" class="btn btn-info">Save</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <datalist id="playerslist">
+        {% for player in players %}
+        <option value='{{ player.name }} - {{ player.team.teamname }} - {{ player.value / 10 }}'>{{player.id}}</option>
+        {% endfor %}
+    </datalist>
+
+{% endblock %}
+
+{% block page_styles%}
+    <link rel="stylesheet" href="/static/style.css">
+{% endblock %}
+
+{% block page_scripts %}
+    <script src="/static/create_team.js"></script>
+{% endblock %}
