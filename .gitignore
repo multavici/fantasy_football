@@ -1,3 +1,4 @@
+.DS_store
 .env
 db_control.py
 scrape_sporza_match_to_file.py
