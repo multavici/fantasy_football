@@ -129,11 +129,11 @@ def matches():
     return render_template('matches.html', title='Matches', matches=matches)
 
 
-@bp.route('/<team_name>')
+@bp.route('/teams/<team_name>')
 @login_required
 def my_fantasy_team(team_name):
-    team = FantasyTeam.query.filter_by(name=team_name).first()
-    return render_template('fantasy_team.html', title='Fantasy Team', team=team)
+    fteam = FantasyTeam.query.filter_by(name=team_name).first()
+    return render_template('fantasy_team.html', title='Fantasy Team', fteam=fteam)
 
 
 @bp.route('/players')

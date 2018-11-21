@@ -1,22 +1,19 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>{{ team.name }}</h1>
+    <h1>{{ fteam.name }}</h1>
     <table class="table table-hover">
-    {% for fplayer in team.fantasy_players %}
+    {% for fplayer in fteam.fantasy_players %}
         <tr>
-            <td>
-                {{ fplayer.position }}
-            </td>
-            <td>
-                {{ fplayer.player.name }}
-            </td>
-            <td>
-                {{ fplayer.player.team }}
-            </td>
-            <td>
-                {{ fplayer.player.value / 10 }}
-            </td>
+            <td>{{ fplayer.position }}</td>
+            <td>{{ fplayer.player.name }}</td>
+            <td>{{ fplayer.player.team }}</td>
+            <td>{{ fplayer.player.value / 10 }}</td>
+            {% for match in (fplayer.player.team.home_matches + fplayer.player.team.away_matches)|sort(attribute='id') %}
+            {% if match.finished %}
+            <td><a href="{{ url_for('main.match', match_id=match.id) }}">{{ fplayer.score(match) }}</a></td>
+            {% endif %}
+            {% endfor %}
         </tr>
     {% endfor %}
     </table>

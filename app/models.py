@@ -91,6 +91,23 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     teamname = db.Column(db.String(64), index=True, unique=True, nullable=False)
     # players = db.relationship('Player', backref='team', lazy=True)
+
+    def result(self, match):
+        if match.home_team == self:
+            if match.home_score > match.away_score:
+                return 'win'
+            if match.home_score < match.away_score:
+                return 'loss'
+            else:
+                return 'draw'
+        if match.away_team == self:
+            if match.home_score > match.away_score:
+                return 'loss'
+            if match.home_score < match.away_score:
+                return 'win'
+            else:
+                return 'draw'
+
     
     def __repr__(self):
         return self.teamname
@@ -150,18 +167,62 @@ class FantasyTeam(db.Model):
     def __repr__(self):
         return '<Fantasy Team: {}>'.format(self.name)
 
+    def get_players_of_pos(self, position):
+        return FantasyPlayer.query.filter_by(team_id=self.id, position=position, sub=False).all()
+
 
 class FantasyPlayer(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey('fantasy_team.id'), primary_key=True)
     number = db.Column(db.Integer, db.CheckConstraint('number<15'), nullable=False)
     position = db.Column(db.String(2), nullable=False)
+    sub = db.Column(db.Boolean)
 
     player = db.relationship('Player', backref='fantasy_teams')
     fantasy_team = db.relationship('FantasyTeam', backref='fantasy_players')
 
     def __repr__(self):
         return '<Fantasy Player: {} for {} as {}>'.format(self.player.name, self.fantasy_team.name, self.position)
+
+    def raw_score(self, match):
+        if self.player.squad_appearance(match) and self.player.squad_appearance(match).minutes_played() > 0:
+            score = 0
+            score += self.player.squad_appearance(match).count_field_goals() * 5
+            score += self.player.squad_appearance(match).count_penalties_scored() * 3
+            score += self.player.squad_appearance(match).count_own_goals() * (-3)
+            score += self.player.squad_appearance(match).count_yellow_cards() * (-1)
+            score += self.player.squad_appearance(match).count_second_yellow_cards() * (-2)
+            score += self.player.squad_appearance(match).count_red_cards() * (-3)
+            if self.player.squad_appearance(match).minutes_played() > 0:
+                score += 2
+                if self.player.team.result(match) == 'win':
+                    score += 3
+                if self.player.team.result(match) == 'draw':
+                    score += 1
+                if self.player.squad_appearance(match).minutes_played() > 60:
+                    score += 1
+        else:
+            score = "-"
+        return score
+
+    def match_on(self, matchday):
+        return (Match.query.filter_by(matchday=matchday, home_team_id=self.player.team_id).first() or
+                Match.query.filter_by(matchday=matchday, away_team_id=self.player.team_id).first())
+
+    def subbed_in_on(self, matchday):
+        for p in self.fantasy_team.get_players_of_pos(self.position):
+            if p.raw_score(p.match_on(matchday)) == "-":
+                return True
+        return False
+
+    def score(self, match):
+        if not self.sub:
+            return self.raw_score(match)
+        else:
+            if self.subbed_in_on(match.matchday):
+                return self.raw_score(match)
+            else:
+                return "-"
 
 
 class SquadAppearance(db.Model):
