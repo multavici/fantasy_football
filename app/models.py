@@ -112,6 +112,12 @@ class Player(db.Model):
     def as_dict(self):
         return {'name': self.name, 'team': self.team.teamname, 'value': self.value}
 
+    def squad_appearance(self, match):
+        try:
+            return SquadAppearance.query.filter_by(player_id=self.id, match_id=match.id).one()
+        except:
+            return False
+
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)

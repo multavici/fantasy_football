@@ -170,5 +170,11 @@ def create_team():
 @login_required
 def match(match_id):
     match = Match.query.get(match_id)
-    print(match.events)
     return render_template('match_detail.html', match=match)
+
+
+@bp.route('/players/<player_id>')
+@login_required
+def player(player_id):
+    player = Player.query.get(player_id)
+    return render_template('player_detail.html', player=player)

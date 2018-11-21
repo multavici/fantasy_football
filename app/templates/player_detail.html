@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+<h1>{{ player.name }}</h1>
+
+<table class="table table-hover">
+    <tr>
+        <th>Game</th>
+        <th>Starting</th>
+        <th>FG</th>
+        <th>Pen</th>
+        <th>YC</th>
+        <th>2YC</th>
+        <th>R</th>
+        <th>OG</th>
+        <th>Out</th>
+        <th>In</th>
+        <th>Min</th>
+        <th>Points</th>
+    </tr>
+    {% for match in (player.team.home_matches + player.team.away_matches)|sort(attribute='id') %}
+        <tr>
+            <td><a href="/matches/{{ match.id }}">{{ match.home_team.teamname }} - {{ match.away_team.teamname }}</a></td>
+            {% if player.squad_appearance(match) in match.squads %}
+            <td>{{ player.squad_appearance(match).starting }}</td>
+            <td>{{ player.squad_appearance(match).count_field_goals() }}</td>
+            <td>{{ player.squad_appearance(match).count_penalties_scored() }}</td>
+            <td>{{ player.squad_appearance(match).count_yellow_cards() }}</td>
+            <td>{{ player.squad_appearance(match).count_second_yellow_cards() }}</td>
+            <td>{{ player.squad_appearance(match).count_red_cards() }}</td>
+            <td>{{ player.squad_appearance(match).count_own_goals() }}</td>
+            <td>
+                {% if player.squad_appearance(match).get_subbed_out_minute() != None %}
+                    {{ player.squad_appearance(match).get_subbed_out_minute() }}'
+                {% endif %}
+            </td>
+            <td>
+                {% if player.squad_appearance(match).get_subbed_in_minute() != None %}
+                    {{ player.squad_appearance(match).get_subbed_in_minute() }}'
+                {% endif %}
+            </td>
+            <td>
+                {{ player.squad_appearance(match).minutes_played() }}
+            </td>
+            <td><strong>score</strong></td>
+            {% else %}
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td><strong>score</strong></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
