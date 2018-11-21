@@ -3,18 +3,34 @@
 {% block app_content %}
     <h1>{{ fteam.name }}</h1>
     <table class="table table-hover">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>value</td>
+            {% for matchday in matchdays %}
+            <td>{{ matchday.id }}</td>
+            {% endfor %}
+        </tr>
     {% for fplayer in fteam.fantasy_players %}
         <tr>
             <td>{{ fplayer.position }}</td>
             <td>{{ fplayer.player.name }}</td>
             <td>{{ fplayer.player.team }}</td>
             <td>{{ fplayer.player.value / 10 }}</td>
-            {% for match in (fplayer.player.team.home_matches + fplayer.player.team.away_matches)|sort(attribute='id') %}
-            {% if match.finished %}
-            <td><a href="{{ url_for('main.match', match_id=match.id) }}">{{ fplayer.match_score(match) }}</a></td>
-            {% endif %}
+            {% for matchday in matchdays %}
+            <td><a href="{{ url_for('main.match', match_id=fplayer.match_on(matchday).id) }}">{{ fplayer.matchday_score(matchday) }}</a></td>
             {% endfor %}
         </tr>
     {% endfor %}
+        <tr>
+            <td>Total:</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            {% for matchday in matchdays %}
+            <td>{{ fteam.matchday_score(matchday) }}</td>
+            {% endfor %}
+        </tr>
     </table>
 {% endblock %}

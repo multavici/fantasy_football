@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from flask_login import current_user, login_required
 from app import db
 from app.main.forms import EditProfileForm, PostForm, FantasyTeamForm
-from app.models import User, Post, Team, Player, Match, FantasyPlayer, FantasyTeam
+from app.models import User, Post, Team, Player, Match, FantasyPlayer, FantasyTeam, Matchday
 from app.main import bp
 
 position = {
@@ -125,15 +125,17 @@ def view_players():
 @bp.route('/matches')
 @login_required
 def matches():
-    matches = Match.query.order_by(Match.matchday).all()
-    return render_template('matches.html', title='Matches', matches=matches)
+    matches = Match.query.all()
+    matchdays = Matchday.query.all()
+    return render_template('matches.html', title='Matches', matches=matches, matchdays=matchdays)
 
 
 @bp.route('/teams/<team_name>')
 @login_required
 def my_fantasy_team(team_name):
     fteam = FantasyTeam.query.filter_by(name=team_name).first()
-    return render_template('fantasy_team.html', title='Fantasy Team', fteam=fteam)
+    matchdays = Matchday.query.filter_by(finished=True).order_by(Matchday.id).all()
+    return render_template('fantasy_team.html', title='Fantasy Team', fteam=fteam, matchdays=matchdays)
 
 
 @bp.route('/players')

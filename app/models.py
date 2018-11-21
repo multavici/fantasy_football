@@ -11,6 +11,7 @@ followers = db.Table('followers',
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -138,7 +139,7 @@ class Player(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    matchday = db.Column(db.Integer, nullable=False)
+    matchday_id = db.Column(db.Integer, db.ForeignKey('matchday.id'))
     home_team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     away_team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     home_score = db.Column(db.Integer)
@@ -147,6 +148,7 @@ class Match(db.Model):
 
     home_team = db.relationship('Team', foreign_keys=[home_team_id], backref='home_matches')
     away_team = db.relationship('Team', foreign_keys=[away_team_id], backref='away_matches')
+    matchday = db.relationship('Matchday', backref='matches')
 
     def __repr__(self):
         return '<Match: {} - {}: {}-{}>'.format(self.home_team.teamname, self.away_team.teamname, self.home_score,
@@ -155,6 +157,11 @@ class Match(db.Model):
     def slugify(self):
         return '{}-{}'.format(self.home_team.teamname.lower().replace(" ", "-"),
                               self.away_team.teamname.lower().replace(" ", "-"))
+
+
+class Matchday(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    finished = db.Column(db.Boolean, default=False)
 
 
 class FantasyTeam(db.Model):
@@ -170,6 +177,12 @@ class FantasyTeam(db.Model):
     def get_players_of_pos(self, position):
         return FantasyPlayer.query.filter_by(team_id=self.id, position=position, sub=False).all()
 
+    def matchday_score(self, matchday):
+        score = 0
+        for fp in self.fantasy_players:
+            score += fp.matchday_score(matchday) if fp.matchday_score(matchday) != "-" else 0
+        return score
+
 
 class FantasyPlayer(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), primary_key=True)
@@ -184,7 +197,8 @@ class FantasyPlayer(db.Model):
     def __repr__(self):
         return '<Fantasy Player: {} for {} as {}>'.format(self.player.name, self.fantasy_team.name, self.position)
 
-    def raw_score(self, match):
+    def raw_score(self, matchday):
+        match = self.match_on(matchday)
         if self.player.squad_appearance(match) and self.player.squad_appearance(match).minutes_played() > 0:
             score = 0
             score += self.player.squad_appearance(match).count_field_goals() * 5
@@ -206,21 +220,21 @@ class FantasyPlayer(db.Model):
         return score
 
     def match_on(self, matchday):
-        return (Match.query.filter_by(matchday=matchday, home_team_id=self.player.team_id).first() or
-                Match.query.filter_by(matchday=matchday, away_team_id=self.player.team_id).first())
+        return (Match.query.filter_by(matchday_id=matchday.id, home_team_id=self.player.team_id).first() or
+                Match.query.filter_by(matchday_id=matchday.id, away_team_id=self.player.team_id).first())
 
     def subbed_in_on(self, matchday):
         for p in self.fantasy_team.get_players_of_pos(self.position):
-            if p.raw_score(p.match_on(matchday)) == "-":
+            if p.raw_score(matchday) == "-":
                 return True
         return False
 
-    def match_score(self, match):
+    def matchday_score(self, matchday):
         if not self.sub:
-            return self.raw_score(match)
+            return self.raw_score(matchday)
         else:
-            if self.subbed_in_on(match.matchday):
-                return self.raw_score(match)
+            if self.subbed_in_on(matchday):
+                return self.raw_score(matchday)
             else:
                 return "-"
 
