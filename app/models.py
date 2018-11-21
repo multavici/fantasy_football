@@ -82,6 +82,7 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post: {}>'.format(self.body)
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -107,7 +108,6 @@ class Team(db.Model):
                 return 'win'
             else:
                 return 'draw'
-
     
     def __repr__(self):
         return self.teamname
@@ -215,7 +215,7 @@ class FantasyPlayer(db.Model):
                 return True
         return False
 
-    def score(self, match):
+    def match_score(self, match):
         if not self.sub:
             return self.raw_score(match)
         else:

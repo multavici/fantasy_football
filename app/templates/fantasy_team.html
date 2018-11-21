@@ -11,7 +11,7 @@
             <td>{{ fplayer.player.value / 10 }}</td>
             {% for match in (fplayer.player.team.home_matches + fplayer.player.team.away_matches)|sort(attribute='id') %}
             {% if match.finished %}
-            <td><a href="{{ url_for('main.match', match_id=match.id) }}">{{ fplayer.score(match) }}</a></td>
+            <td><a href="{{ url_for('main.match', match_id=match.id) }}">{{ fplayer.match_score(match) }}</a></td>
             {% endif %}
             {% endfor %}
         </tr>
