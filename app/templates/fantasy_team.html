@@ -4,12 +4,12 @@
     <h1>{{ fteam.name }}</h1>
     <table class="table table-hover">
         <tr>
-            <td>Position</td>
-            <td>Player</td>
-            <td>Team</td>
-            <td>Value</td>
+            <th>Position</th>
+            <th>Player</th>
+            <th>Team</th>
+            <th>Value</th>
             {% for matchday in matchdays %}
-            <td>{{ matchday.id }}</td>
+            <th>{{ matchday.id }}</th>
             {% endfor %}
         </tr>
     {% for fplayer in fteam.fantasy_players %}
