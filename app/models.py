@@ -169,6 +169,7 @@ class FantasyTeam(db.Model):
     name = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     formation = db.Column(db.String(3))
+
     user = db.relationship('User', backref='fantasy_teams')
 
     def __repr__(self):
@@ -182,6 +183,13 @@ class FantasyTeam(db.Model):
         for fp in self.fantasy_players:
             score += fp.matchday_score(matchday) if fp.matchday_score(matchday) != "-" else 0
         return score
+
+    def total_score(self):
+        matchdays = Matchday.query.filter_by(finished=True).all()
+        total_score = 0
+        for matchday in matchdays:
+            total_score += self.matchday_score(matchday)
+        return total_score
 
 
 class FantasyPlayer(db.Model):

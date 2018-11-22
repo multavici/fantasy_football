@@ -4,10 +4,10 @@
     <h1>{{ fteam.name }}</h1>
     <table class="table table-hover">
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>value</td>
+            <td>Position</td>
+            <td>Player</td>
+            <td>Team</td>
+            <td>Value</td>
             {% for matchday in matchdays %}
             <td>{{ matchday.id }}</td>
             {% endfor %}
@@ -31,6 +31,7 @@
             {% for matchday in matchdays %}
             <td>{{ fteam.matchday_score(matchday) }}</td>
             {% endfor %}
+            <td><strong>{{ fteam.total_score() }}</strong></td>
         </tr>
     </table>
 {% endblock %}
