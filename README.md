@@ -12,6 +12,7 @@ Later the main functionality was added:
 Technology used:
 * Application written in Python - Flask
 * Structure in different parts with Flask Blueprints
+* Sqlite3 database
 * Database management with Flask-migrate based on Alembic
 * Connection beween app and database with Flask-SQLAlchemy based on SQLAlchemy ORM
 * Forms with Flask-WTF based on WTForms
