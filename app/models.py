@@ -191,6 +191,15 @@ class FantasyTeam(db.Model):
             total_score += self.matchday_score(matchday)
         return total_score
 
+    def score_table(self):
+        q_events_home = db.session.query(Event).join(Event.match).join(Match.home_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
+        q_events_away = db.session.query(Event).join(Event.match).join(Match.away_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
+        events = q_events_home.union(q_events_away).all()
+        q1 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.home_matches).outerjoin(Match.events)
+        q2 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.away_matches).outerjoin(Match.events)
+        result = q1.union(q2).filter(FantasyTeam.id == self.id).all()
+
+
 
 class FantasyPlayer(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), primary_key=True)
