@@ -9,7 +9,7 @@ Later the main functionality was added:
 * Logic to calculate score for every FantasyPlayer/FantasyTeam
 * Views to show the info and rakings to all logged-in users
 
-The technology used is:
+Technology used:
 * Application written in Python - Flask
 * Structure in different parts with Flask Blueprints
 * Database management with Flask-migrate based on Alembic
