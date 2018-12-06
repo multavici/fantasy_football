@@ -2,7 +2,7 @@
 
 This is a repository with the code for a Fantasy Football website.
 
-The project is based on the ![Flask Mega Tutorial by Miguel Grinberg](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world "Flask Mega Tutorial by Miguel Grinberg") as a starting point for the login and comment functionality. 
+The project is based on the [Flask Mega Tutorial by Miguel Grinberg](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world "Flask Mega Tutorial by Miguel Grinberg") as a starting point for the login and comment functionality. 
 Later the main functionality was added:
 * Database structure with Teams, Players, Matches, Events and Subevents (Cards, Goals, Substitutions, Penalties) on the one hand and FantasyTeams, FantasyPlayers, SquadsAppearances on the other.
 * Import scripts to scrape the match data from websites
