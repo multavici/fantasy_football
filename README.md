@@ -18,4 +18,5 @@ Technology used:
 * Forms with Flask-WTF based on WTForms
 * Templates with Jinja2
 * CSS with Flask-Bootstrap
+* Web scraping with BeautifulSoup
 * Some custom JS 
