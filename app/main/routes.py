@@ -135,7 +135,27 @@ def matches():
 def my_fantasy_team(team_name):
     fteam = FantasyTeam.query.filter_by(name=team_name).first()
     matchdays = Matchday.query.filter_by(finished=True).order_by(Matchday.id).all()
-    return render_template('fantasy_team.html', title='Fantasy Team', fteam=fteam, matchdays=matchdays)
+    score_table = fteam.score_table()
+    score_dict = {}
+    total_score_per_player = {}
+    total_score_per_matchday = {}
+    for player_id, matchday, score in score_table:
+        score_dict.setdefault(player_id, []).append(score if score is not None else '-')
+        total_score_per_player.setdefault(player_id, 0)
+        total_score_per_player[player_id] += (score if score is not None else 0)
+        total_score_per_matchday.setdefault(matchday, 0)
+        total_score_per_matchday[matchday] += (score if score is not None else 0)
+    total_score = sum(total_score_per_player.values())
+    return render_template(
+        'fantasy_team.html', 
+        title='Fantasy Team', 
+        fteam=fteam, 
+        matchdays=matchdays, 
+        score_dict=score_dict, 
+        total_score_per_player=total_score_per_player, 
+        total_score_per_matchday=total_score_per_matchday,
+        total_score=total_score
+    )
 
 
 @bp.route('/players')

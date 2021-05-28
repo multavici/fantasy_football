@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db, login
@@ -192,12 +193,17 @@ class FantasyTeam(db.Model):
         return total_score
 
     def score_table(self):
-        q_events_home = db.session.query(Event).join(Event.match).join(Match.home_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
-        q_events_away = db.session.query(Event).join(Event.match).join(Match.away_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
-        events = q_events_home.union(q_events_away).all()
-        q1 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.home_matches).outerjoin(Match.events)
-        q2 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.away_matches).outerjoin(Match.events)
-        result = q1.union(q2).filter(FantasyTeam.id == self.id).all()
+        print(os.path.realpath(__file__))
+        with open(os.path.dirname(os.path.realpath(__file__)) + '/score_table.sql', 'r') as f:
+            query = f.read()
+        return db.session.execute(query, {'team_id': self.id})
+
+        # q_events_home = db.session.query(Event).join(Event.match).join(Match.home_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
+        # q_events_away = db.session.query(Event).join(Event.match).join(Match.away_team).outerjoin(Player).join(FantasyPlayer).join(FantasyTeam).filter(FantasyTeam.id == self.id)
+        # events = q_events_home.union(q_events_away).all()
+        # q1 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.home_matches).outerjoin(Match.events)
+        # q2 = db.session.query(FantasyTeam).outerjoin(FantasyTeam.fantasy_players).join(Player).join(Team).outerjoin(Team.away_matches).outerjoin(Match.events)
+        # result = q1.union(q2).filter(FantasyTeam.id == self.id).all()
 
 
 
@@ -216,21 +222,23 @@ class FantasyPlayer(db.Model):
 
     def raw_score(self, matchday):
         match = self.match_on(matchday)
-        if self.player.squad_appearance(match) and self.player.squad_appearance(match).minutes_played() > 0:
+        squad_appearance = self.player.squad_appearance(match)
+        if squad_appearance and squad_appearance.minutes_played() > 0:
             score = 0
-            score += self.player.squad_appearance(match).count_field_goals() * 5
-            score += self.player.squad_appearance(match).count_penalties_scored() * 3
-            score += self.player.squad_appearance(match).count_own_goals() * (-3)
-            score += self.player.squad_appearance(match).count_yellow_cards() * (-1)
-            score += self.player.squad_appearance(match).count_second_yellow_cards() * (-2)
-            score += self.player.squad_appearance(match).count_red_cards() * (-3)
-            if self.player.squad_appearance(match).minutes_played() > 0:
+            score += squad_appearance.count_field_goals() * 5
+            score += squad_appearance.count_penalties_scored() * 3
+            score += squad_appearance.count_own_goals() * (-3)
+            score += squad_appearance.count_yellow_cards() * (-1)
+            score += squad_appearance.count_second_yellow_cards() * (-2)
+            score += squad_appearance.count_red_cards() * (-3)
+            if squad_appearance.minutes_played() > 0:
                 score += 2
-                if self.player.team.result(match) == 'win':
+                team_result = self.player.team.result(match)
+                if team_result == 'win':
                     score += 3
-                if self.player.team.result(match) == 'draw':
+                if team_result == 'draw':
                     score += 1
-                if self.player.squad_appearance(match).minutes_played() > 60:
+                if squad_appearance.minutes_played() > 60:
                     score += 1
         else:
             score = "-"
@@ -242,7 +250,8 @@ class FantasyPlayer(db.Model):
 
     def subbed_in_on(self, matchday):
         for p in self.fantasy_team.get_players_of_pos(self.position):
-            if p.raw_score(matchday) == "-":
+            # if p.raw_score(matchday) == "-":
+            if not(p.player.squad_appearance(self.match_on(matchday)) and p.player.squad_appearance(self.match_on(matchday)).minutes_played() > 0):
                 return True
         return False
 

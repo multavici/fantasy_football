@@ -11,6 +11,7 @@
             {% for matchday in matchdays %}
             <th>{{ matchday.id }}</th>
             {% endfor %}
+            <th>Total:</th>
         </tr>
     {% for fplayer in fteam.fantasy_players %}
         <tr>
@@ -19,8 +20,9 @@
             <td>{{ fplayer.player.team }}</td>
             <td>{{ fplayer.player.value / 10 }}</td>
             {% for matchday in matchdays %}
-            <td><a href="{{ url_for('main.match', match_id=fplayer.match_on(matchday).id) }}">{{ fplayer.matchday_score(matchday) }}</a></td>
+            <td><a href="{{ url_for('main.match', match_id=fplayer.match_on(matchday).id) }}">{{ score_dict[fplayer.player_id][matchday.id - 1] }}</a></td>
             {% endfor %}
+            <td>{{ total_score_per_player[fplayer.player_id] }}</td>
         </tr>
     {% endfor %}
         <tr>
@@ -29,9 +31,9 @@
             <td></td>
             <td></td>
             {% for matchday in matchdays %}
-            <td>{{ fteam.matchday_score(matchday) }}</td>
+            <td>{{ total_score_per_matchday[matchday.id] }}</td>
             {% endfor %}
-            <td><strong>{{ fteam.total_score() }}</strong></td>
+            <td><strong>{{ total_score }}</strong></td>
         </tr>
     </table>
 {% endblock %}
