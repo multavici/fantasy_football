@@ -2,7 +2,7 @@
 
 {% block app_content %}
     <h1>Make team</h1>
-    <p>The total value of your team can not exceed 30 mln</p>
+    <p>The total value of your team can not exceed 100 mln</p>
     <div class="col-md-12">
         <form action="" method="post" novalidate class="form-inline" id="playerform">
             {{ form.csrf_token }}
@@ -41,7 +41,7 @@
 
     <datalist id="playerslist">
         {% for player in players %}
-        <option value='{{ player.name }} - {{ player.team.teamname }} - {{ player.value / 10 }}'>{{player.id}}</option>
+        <option value='{{ player.name }} - {{ player.team.teamname }} - {{ player.value }}'></option>
         {% endfor %}
     </datalist>
 

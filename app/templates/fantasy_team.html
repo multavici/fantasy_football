@@ -18,7 +18,7 @@
             <td>{{ fplayer.position }}</td>
             <td>{{ fplayer.player.name }}</td>
             <td>{{ fplayer.player.team }}</td>
-            <td>{{ fplayer.player.value / 10 }}</td>
+            <td>{{ fplayer.player.value }}</td>
             {% for matchday in matchdays %}
             <td><a href="{{ url_for('main.match', match_id=fplayer.match_on(matchday).id) }}">{{ score_dict[fplayer.player_id][matchday.id - 1] }}</a></td>
             {% endfor %}

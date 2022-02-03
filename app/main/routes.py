@@ -9,7 +9,12 @@ from app.main import bp
 position = {
     '433': ['GK', 'D', 'D', 'D', 'D', 'M', 'M', 'M', 'A', 'A', 'A', 'GK', 'D', 'M', 'A'],
     '442': ['GK', 'D', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'A', 'A', 'GK', 'D', 'M', 'A'],
-    '352': ['GK', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'M', 'A', 'A', 'GK', 'D', 'M', 'A']
+    '352': ['GK', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'M', 'A', 'A', 'GK', 'D', 'M', 'A'],
+    '343': ['GK', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'A', 'A', 'A', 'GK', 'D', 'M', 'A'],
+    '451': ['GK', 'D', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'M', 'A', 'GK', 'D', 'M', 'A'],
+    '523': ['GK', 'D', 'D', 'D', 'D', 'D', 'M', 'M', 'A', 'A', 'A', 'GK', 'D', 'M', 'A'],
+    '532': ['GK', 'D', 'D', 'D', 'D', 'D', 'M', 'M', 'M', 'A', 'A', 'GK', 'D', 'M', 'A'],
+    '541': ['GK', 'D', 'D', 'D', 'D', 'D', 'M', 'M', 'M', 'M', 'A', 'GK', 'D', 'M', 'A'],
 }
 
 @bp.before_app_request
@@ -21,21 +26,8 @@ def before_request():
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
-@login_required
 def index():
-    form = PostForm()
-    if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        flash('Your post is now live!')
-        return redirect(url_for('main.index'))
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('main.index', page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('main.index', page=posts.prev_num) if posts.has_prev else None
-    return render_template('index.html', title='Home Page', form=form, posts=posts.items,
-                           next_url=next_url, prev_url=prev_url)
+    return render_template('index.html', title='Home Page')
 
 
 @bp.route('/user/<username>')
@@ -65,65 +57,19 @@ def edit_profile():
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
 
-@bp.route('/follow/<username>')
-@login_required
-def follow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash('User {} not found'.format(username))
-        return redirect(url_for('main.index'))
-    if user == current_user:
-        flash('You can not follow yourself')
-        return redirect(url_for('main.user', username=username))
-    current_user.follow(user)
-    db.session.commit()
-    flash('You are now following {}'.format(username))
-    return redirect(url_for('main.user', username=username))
-
-
-@bp.route('/unfollow/<username>')
-@login_required
-def unfollow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash('User {} not found'.format(username))
-        return redirect(url_for('main.index'))
-    if user == current_user:
-        flash('You can not unfollow yourself')
-        return redirect(url_for('main.user', username=username))
-    current_user.unfollow(user)
-    db.session.commit()
-    flash('You are not following {}'.format(username))
-    return redirect(url_for('main.user', username=username))
-
-
-@bp.route('/explore')
-@login_required
-def explore():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('main.explore', page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('main.explore', page=posts.prev_num) if posts.has_prev else None
-    return render_template('index.html', title="Explore", posts=posts.items,
-                           next_url=next_url, prev_url=prev_url)
-
-
 @bp.route('/view_teams')
-@login_required
 def view_teams():
     teams = Team.query.all()
     return render_template('view_teams.html', title="View Teams", teams=teams)
 
 
 @bp.route('/view_players')
-@login_required
 def view_players():
     players = Player.query.all()
     return render_template('view_players.html', title="View Players", players=players)
 
 
 @bp.route('/matches')
-@login_required
 def matches():
     matches = Match.query.all()
     matchdays = Matchday.query.all()
@@ -159,7 +105,6 @@ def my_fantasy_team(team_name):
 
 
 @bp.route('/players')
-@login_required
 def players_dict():
     players = Player.query.all()
     list_players = [player.as_dict() for player in players]
@@ -189,7 +134,6 @@ def create_team():
 
 
 @bp.route('/matches/<match_id>')
-@login_required
 def match(match_id):
     match = Match.query.get(match_id)
     return render_template('match_detail.html', match=match)

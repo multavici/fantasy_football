@@ -1,0 +1,73 @@
+WITH 
+fantasy_players AS
+  (
+    SELECT fantasy_player.player_id AS id
+    FROM fantasy_player 
+    WHERE fantasy_player.team_id = 11
+  ),
+grid AS
+  (
+    SELECT fantasy_players.id AS id, matchday.id AS matchday 
+    FROM fantasy_players 
+    CROSS JOIN matchday
+    WHERE matchday.finished = TRUE
+  ),
+starting AS
+  (
+    SELECT fantasy_players.id, "match".matchday_id, squad_appearance.starting 
+    FROM fantasy_players
+    JOIN squad_appearance
+      ON fantasy_players.id = squad_appearance.player_id
+    JOIN "match"
+      ON squad_appearance.match_id = "match".id
+  ),
+subbed_in AS
+  (
+    SELECT fantasy_players.id, "match".matchday_id, event.minute AS subbed_in_minute
+    FROM substitution
+    JOIN fantasy_players
+      ON substitution.player_in_id = fantasy_players.id
+    JOIN event
+      ON substitution.id = event.id
+    JOIN "match"
+      ON event.match_id = "match".id
+  ),
+subbed_out AS
+  (
+    SELECT fantasy_players.id, "match".matchday_id, event.minute AS subbed_out_minute
+    FROM substitution
+    JOIN fantasy_players
+      ON substitution.player_out_id = fantasy_players.id
+    JOIN event
+      ON substitution.id = event.id
+    JOIN "match"
+      ON event.match_id = "match".id
+  ),
+minutes_played AS
+  (
+    SELECT grid.id, grid.matchday,
+      CASE 
+      WHEN starting = 1 THEN 
+        CASE 
+        WHEN subbed_out_minute IS NULL THEN 90 
+        ELSE subbed_out_minute 
+        END 
+      WHEN starting = 0 THEN 
+        CASE 
+        WHEN subbed_in_minute IS NULL THEN 0 
+        ELSE 
+          CASE WHEN subbed_in_minute < 90 THEN 90 - subbed_in_minute 
+          ELSE 5 
+          END 
+        END
+      ELSE 0 
+      END minutes_played
+    FROM grid
+    LEFT JOIN starting
+      ON grid.id = starting.id AND grid.matchday = starting.matchday_id
+    LEFT JOIN subbed_in
+      ON grid.id = subbed_in.id AND grid.matchday = subbed_in.matchday_id
+    LEFT JOIN subbed_out
+      ON grid.id = subbed_out.id AND grid.matchday = subbed_out.matchday_id
+  )
+SELECT * FROM minutes_played

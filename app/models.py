@@ -270,6 +270,8 @@ class SquadAppearance(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey('match.id'), primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     starting = db.Column(db.Boolean, nullable=False)
+    man_of_the_match = db.Column(db.Boolean)
+    rating = db.Column(db.Integer)
 
     player = db.relationship('Player', backref='squad_appearances')
     match = db.relationship('Match', backref='squads')
@@ -277,9 +279,9 @@ class SquadAppearance(db.Model):
 
     def __repr__(self):
         if self.starting:
-            return '<Squad Appearance from {} in match {} in the starting lineup>'.format(self.player.name, self.match)
+            return f'<Squad Appearance from {self.player.name} in match {self.match}>'
         else:
-            return '<Squad Appearance from {} in match {} as a substitute>'.format(self.player.name, self.match)
+            return f'<Squad Appearance from {self.player.name} in match {self.match}>'
 
     def count_field_goals(self):
         return Goal.query.filter_by(scorer_id=self.player_id, match_id=self.match_id, goal_type='field_goal').count()

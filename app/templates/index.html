@@ -2,29 +2,50 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    {% if form %}
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
-    {% endif %}
-    {% for post in posts %}
-        {% include "_post.html" %}
-    {% endfor %}
-    <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous{% if not prev_url %} disabled{% endif %}">
-                <a href="{{ prev_url or '#' }}">
-                    <span aria-hidden="true">&larr;</span> Newer posts
-                </a>
-            </li>
-            <li class="next{% if not next_url %} disabled{% endif %}">
-                <a href="{{ next_url or '#' }}">
-                    Older posts <span aria-hidden="true">&rarr;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <h2>Rules of the game</h2>
+    <h3>Team result</h3>
+    <ul>
+        <li>Team Win: 3 pts</li>
+        <li>Team Draw: 1 pt</li>
+        <li>Team Loss: 0 pt</li>
+    </ul>
+    <p>* In the knock-out stages, the result after extra time counts</p>
+    <h3>Individual performance</h3>
+    <ul>
+        <li>Points of the player on whoscored.com</li>
+        <li>Man of the Match on whoscored.com: 5 pts</li>
+    </ul>
+    <h3>Goals</h3>
+    <ul>
+        <li>Attacker/midfielder/defender: 5 pts</li>
+        <li>Goal keeper: 10 pts</li>
+    </ul>
+    <h3>Assists</h3>
+    <ul>
+        <li>3 pts</li>
+    </ul>
+    <h3>Clean sheets</h3>
+    <ul>
+        <li>Goal keeper: 5 pts</li>
+        <li>Defender: 3 pts</li>
+        <li>Attacker/midfielder: 1 pt</li>
+    </ul>
+    <p>* for players who played a minimum of 60 minutes</p>
+    <h3>Penalties</h3>
+    <ul>
+        <li>Scored penalty: 5 pts</li>
+        <li>Missed penalty: -5 pts</li>
+        <li>Goal keeper who saves penalty: 5 pts</li>
+    </ul>
+    <p>* also counts for penalties during shoot-out in knock-out phase</p>
+    <h3>Cards</h3>
+    <ul>
+        <li>Yellow card: -1 pt</li>
+        <li>Red card: -3 pts</li>
+    </ul>
+    <p>* 2nd yellow card = red card = -3 pts</p>
+    <h3>Own goals</h3>
+    <ul>
+        <li>-3 pts</li>
+    </ul>
 {% endblock %}

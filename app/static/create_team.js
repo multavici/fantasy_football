@@ -12,10 +12,40 @@ let form_433 = ["Goal Keeper",
 let breaks_433 = [0,4,7,10,14];
 let form_352 = ["Goal Keeper",
             "Right Center Back", "Center Back", "Left Center Back",
-            "Right Wing Back", "Central Midfielder 1", "Central Midfielder 2", "Central Midfielder 3", "Left Wing Back",
+            "Right Midfielder", "Central Midfielder 1", "Central Midfielder 2", "Central Midfielder 3", "Left Midfielder",
             "Center Forward 1", "Center Forward 2",
             "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
 let breaks_352 = [0,3,8,10,14];
+let form_343 = ["Goal Keeper",
+            "Right Center Back", "Center Back", "Left Center Back",
+            "Right Midfielder", "Central Midfielder 1", "Central Midfielder 2", "Left Midfielder",
+            "Right Forward", "Center Forward", "Left Forward",
+            "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
+let breaks_343 = [0,3,8,10,14];
+let form_451 = ["Goal Keeper",
+            "Right Back", "Center Back 1", "Center Back 2", "Left back",
+            "Right Midfielder", "Central Midfielder 1", "Central Midfielder 2", "Central Midfielder 3", "Left Midfielder",
+            "Center Forward",
+            "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
+let breaks_451 = [0,3,8,10,14];
+let form_523 = ["Goal Keeper",
+            "Right Wing Back", "Right Center Back", "Center Back", "Left Center Back", "Left Wing Back",
+            "Central Midfielder 1", "Central Midfielder 2",
+            "Right Forward", "Center Forward", "Left Forward",
+            "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
+let breaks_523 = [0,3,8,10,14];
+let form_532 = ["Goal Keeper",
+            "Right Wing Back", "Right Center Back", "Center Back", "Left Center Back", "Left Wing Back",
+            "Central Midfielder 1", "Central Midfielder 2", "Central Midfielder 3",
+            "Center Forward 1", "Center Forward 2",
+            "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
+let breaks_532 = [0,3,8,10,14];
+let form_541 = ["Goal Keeper",
+            "Right Wing Back", "Right Center Back", "Center Back", "Left Center Back", "Left Wing Back",
+            "Right Midfielder", "Central Midfielder 1", "Central Midfielder 2", "Left Midfielder",
+            "Center Forward",
+            "Sub Goal Keeper", "Sub Defender", "Sub Midfielder", "Sub Forward"];
+let breaks_541 = [0,3,8,10,14];
 
 $(document).ready(function(){
     // get the labels for the player positions
@@ -52,7 +82,30 @@ $(document).ready(function(){
             document.getElementById('players-'+i).label.innerHTML = form_352[i];
         }
     });
-
-
+    $('input[value="343"]').click(function(){
+        for (i = 0; i < 15; i++) {
+            document.getElementById('players-'+i).label.innerHTML = form_343[i];
+        }
+    });
+    $('input[value="451"]').click(function(){
+        for (i = 0; i < 15; i++) {
+            document.getElementById('players-'+i).label.innerHTML = form_451[i];
+        }
+    });
+    $('input[value="523"]').click(function(){
+        for (i = 0; i < 15; i++) {
+            document.getElementById('players-'+i).label.innerHTML = form_523[i];
+        }
+    });
+    $('input[value="532"]').click(function(){
+        for (i = 0; i < 15; i++) {
+            document.getElementById('players-'+i).label.innerHTML = form_532[i];
+        }
+    });
+    $('input[value="541"]').click(function(){
+        for (i = 0; i < 15; i++) {
+            document.getElementById('players-'+i).label.innerHTML = form_541[i];
+        }
+    });
 
 });

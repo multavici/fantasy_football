@@ -29,7 +29,20 @@ class PostForm(FlaskForm):
 
 class FantasyTeamForm(FlaskForm):
     teamname = StringField('Team Name', validators=[DataRequired(), Length(max=40)])
-    formation = RadioField('Formation', choices=[('433', '433'), ('442', '442'), ('352', '352')], default='433')
+    formation = RadioField(
+        label='Formation', 
+        choices=[
+            ('433', '433'), 
+            ('442', '442'), 
+            ('352', '352'), 
+            ('343', '343'),
+            ('451', '451'),
+            ('523', '523'),
+            ('532', '532'),
+            ('541', '541'),
+        ], 
+        default='433'
+    )
     players = FieldList(StringField('Name', validators=[DataRequired()]), min_entries=15)
 
     def validate(self):
@@ -46,25 +59,40 @@ class FantasyTeamForm(FlaskForm):
                 picked.append(player.data)
 
         # check if more than max amount of players from the same team is picked
+        # players_per_team = dict()
+        # for player in self.players:
+        #     team = player.data.split(" - ")[1]
+        #     if players_per_team.get(team):
+        #         if players_per_team[team] == 3:
+        #             player.errors.append('Please select maximum 3 players of the same team')
+        #             result = False
+        #         else:
+        #             players_per_team[team] += 1
+        #     else:
+        #         players_per_team[team] = 1
+
+        # check if players per team is valid
         players_per_team = dict()
         for player in self.players:
             team = player.data.split(" - ")[1]
             if players_per_team.get(team):
-                if players_per_team[team] == 3:
-                    player.errors.append('Please select maximum 3 players of the same team')
-                    result = False
-                else:
-                    players_per_team[team] += 1
+                players_per_team[team] += 1
             else:
                 players_per_team[team] = 1
+        players_per_team_list = list(players_per_team.values())
+        players_per_team_list.sort(reverse=True)
+        if players_per_team_list[0] > 3 or players_per_team_list[1] > 2:
+            flash(f"You can choose maximum 3 players from 1 team and maximum 2 players of the rest, please choose other players", 'alert-danger')
+            result = False
+
 
         # check if total value is less than max value
         total_value = 0
         for player in self.players:
             value = Decimal(player.data.split(" - ")[2])
             total_value += value
-        if total_value > 30:
-            flash('The maximum value is 30, the total value of these players is ' + str(total_value) + ', please choose cheaper players', 'alert-danger')
+        if total_value > 100:
+            flash('The maximum value is 100, the total value of these players is ' + str(total_value) + ', please choose cheaper players', 'alert-danger')
             result = False
 
         return result
